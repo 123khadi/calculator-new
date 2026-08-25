@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details</title>
+  <style>
+    /* Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      color: #334155;
+      line-height: 1.6;
+      background-color: #f8fafc;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      width: 240px;
+      background-color: #0f172a;
+      color: #fff;
+      padding: 30px 20px;
+      flex-shrink: 0;
+    }
+
+    .sidebar h2 {
+      font-size: 1.4rem;
+      margin-bottom: 25px;
+      color: #38bdf8;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #94a3b8;
+      text-decoration: none;
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    /* Main Container */
+    .container {
+      flex: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    /* Product Layout */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 40px;
+      background: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Product Gallery */
+    .product-gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .main-image {
+      width: 100%;
+      height: 380px;
+      background-color: #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .main-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .thumbnail-grid {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .thumbnail {
+      width: 70px;
+      height: 70px;
+      border-radius: 8px;
+      cursor: pointer;
+      overflow: hidden;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+      opacity: 0.7;
+    }
+
+    .thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .thumbnail.active,
+    .thumbnail:hover {
+      border-color: #007bff;
+      opacity: 1;
+    }
+
+    /* Product Info */
+    .product-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-name {
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      color: #007bff;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .product-title {
+      font-size: 2rem;
+      color: #0f172a;
+      margin-bottom: 10px;
+    }
+
+    .price-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .current-price {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #0f172a;
+    }
+
+    .original-price {
+      text-decoration: line-through;
+      color: #94a3b8;
+      font-size: 1.1rem;
+    }
+
+    /* Description Formatting */
+    .product-description {
+      margin-bottom: 25px;
+      color: #475569;
+    }
+
+    .product-description h3 {
+      font-size: 1.05rem;
+      color: #0f172a;
+      margin: 15px 0 8px 0;
+    }
+
+    .product-description ul {
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+
+    .product-description li {
+      margin-bottom: 6px;
+    }
+
+    /* Options & Controls */
+    .option-group {
+      margin-bottom: 20px;
+    }
+
+    .option-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .color-picker {
+      display: flex;
+      gap: 10px;
+    }
+
+    .color-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      outline: 1px solid #cbd5e1;
+      cursor: pointer;
+    }
+
+    .color-btn.active {
+      outline: 2px solid #007bff;
+    }
+
+    .quantity-select {
+      width: 100px;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    /* Actions */
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-add-cart {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    .btn-add-cart:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-buy-now {
+      background-color: #0f172a;
+      color: #fff;
+    }
+
+    .btn-buy-now:hover {
+      background-color: #1e293b;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+      }
+    }
+
+    .color-btn active{
+        background-color: #0f172a
+    }
+    .color-btn1{
+        background-color: #e2e8f0;
+    }
+    .color-btn2{
+            background-color: #3b82f6;
+    }
+  </style>
+</head>
+<body>
+    
+  <!-- Dashboard Sidebar -->
+  <aside class="sidebar">
+    <h2>Dashboard</h2>
+    <a href="index.html">Online store</a>
+    <a href="service.html">Product 1</a>
+    <a href="client.html">Product 2</a>
+    <a href="product.html" class="active">Digital Product</a>
+    <a href="contact.html">Product 3</a>
+    <a href="privacy.html">Product 4</a>
+    <a href="condition.html">Product 5</a>
+  </aside>
+
+  <main class="container">
+    <div class="product-grid">
+
+      <!-- Left Gallery Section -->
+      <div class="product-gallery">
+        <div class="main-image">
+          <img src="images/Blackimage.png" alt="Wireless Headphones">
+        </div>
+        <div class="thumbnail-grid">
+          <div class="thumbnail active">
+            <img src="public/images/Blue.png" alt="Blue Headphone Thumbnail">
+          </div>
+          <div class="thumbnail">
+            <img src="public/images/headphone.jpg" alt="Headphone Detail Thumbnail">
+          </div>
+          <div class="thumbnail">
+            <img src="public/images/Redimage.png" alt="Red Headphone Thumbnail">
+          </div>
+          <div class="thumbnail">
+            <img src="public/images/white.png" alt="White Headphone Thumbnail">
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Details Section -->
+      <div class="product-info">
+        <span class="brand-name">AudioTech</span>
+        <h1 class="product-title">Wireless Noise-Canceling Headphones</h1>
+
+        <div class="price-container">
+          <span class="current-price">$249.99</span>
+          <span class="original-price">$299.99</span>
+        </div>
+
+        <div class="product-description">
+          <p>Experience world-class acoustic clarity with active noise cancellation, custom EQ tuning, and all-day battery performance designed to keep you immersed in your sound.</p>
+
+          <h3>Feature Highlights</h3>
+          <ul>
+            <li><strong>Advanced Active Noise Cancellation (ANC):</strong> Hybrid ANC technology blocks out ambient background noise so you can focus on your music, calls, or podcasts.</li>
+            <li><strong>Crystal-Clear Sound:</strong> Precision-tuned 40mm drivers deliver rich bass, crisp highs, and balanced mids.</li>
+            <li><strong>30-Hour Battery Life:</strong> Fast-charging capabilities give you up to 3 hours of playback with just a 10-minute charge.</li>
+            <li><strong>All-Day Comfort:</strong> Lightweight design featuring ultra-soft memory foam ear cushions and an adjustable headband.</li>
+            <li><strong>Seamless Connectivity:</strong> Bluetooth 5.2 with multipoint pairing allows you to switch effortlessly between devices.</li>
+          </ul>
+
+          <h3>Description</h3>
+          <p>Elevate your daily listening experience with high-fidelity sound engineered for clarity and depth. Whether you are working in a bustling coffee shop, commuting, or unwinding at home, advanced active noise cancellation isolates external distractions so you hear only what matters.</p>
+
+          <h3>Technical Specifications</h3>
+          <ul>
+            <li><strong>Driver Size:</strong> 40mm Dynamic</li>
+            <li><strong>Frequency Response:</strong> 20Hz – 20kHz</li>
+            <li><strong>Battery Life:</strong> Up to 30 hours (ANC on) / 40 hours (ANC off)</li>
+            <li><strong>Connectivity:</strong> Bluetooth 5.2 / 3.5mm Aux Cable</li>
+            <li><strong>Microphone:</strong> Quad-mic array for noise-canceling voice pickup</li>
+          </ul>
+        </div>
+
+        <!-- Color Options -->
+        <div class="option-group">
+          <label>Color</label>
+          <div class="color-picker">
+            <button class="color-btn active" aria-label="Black"></button>
+            <button class="color-btn1" aria-label="Blue"></button>
+            <button class="color-btn2" aria-label="headphone"></button>
+            <button class="color-btn2" aria-label="Red"></button>
+            <button class="color-btn2" aria-label="white"></button>
+          </div>
+        </div>
+
+        <!-- Quantity -->
+        <div class="option-group">
+          <label for="quantity">Quantity</label>
+          <select id="quantity" class="quantity-select">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn btn-add-cart">Add to Cart</button>
+          <button class="btn btn-buy-now">Buy Now</button>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>

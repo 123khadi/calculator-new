@@ -1,0 +1,14 @@
+{
+  "history": [
+    {
+      "expression": "2*4",
+      "result": 8,
+      "time": "8/20/2026, 1:12:17 AM",
+      "id": "nQtvSaPvUzQ"
+    }
+  ],
+  "settings": {
+    "theme": "light"
+  },
+  "$schema": "./node_modules/json-server/schema.json"
+}

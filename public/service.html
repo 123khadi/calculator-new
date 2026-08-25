@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Services</title>
+  <style>
+    /* Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      color: #333;
+      line-height: 1.6;
+      background-color: #f8f9fa;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: #fff;
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+      opacity: 0.9;
+    }
+
+    /* Services Section */
+    .services-section {
+      padding: 60px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-title h2 {
+      font-size: 2rem;
+      color: #222;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .service-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .service-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      display: inline-block;
+    }
+
+    .service-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+      color: #007bff;
+    }
+
+    .service-card p {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background-color: #1e293b;
+      color: #fff;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .cta-section h2 {
+      margin-bottom: 15px;
+    }
+
+    .cta-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 30px;
+      background-color: #007bff;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .cta-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero Banner -->
+  <header class="hero">
+    <div class="container">
+      <h1>Our Professional Services</h1>
+      <p>We provide high-quality solutions designed to scale your business and boost efficiency.</p>
+    </div>
+  </header>
+
+  <!-- Services Grid -->
+  <main class="services-section">
+    <div class="container">
+      <div class="section-title">
+        <h2>What We Offer</h2>
+      </div>
+
+      <div class="services-grid">
+        <!-- Service 1 -->
+        <article class="service-card">
+          <div class="service-icon">💻</div>
+          <h3>Web Development</h3>
+          <p>Custom, responsive websites built using the latest web standards and optimized for performance.</p>
+        </article>
+
+        <!-- Service 2 -->
+        <article class="service-card">
+          <div class="service-icon">📱</div>
+          <h3>Mobile App Design</h3>
+          <p>User-friendly cross-platform mobile applications tailored to engage your audience on iOS and Android.</p>
+        </article>
+
+        <!-- Service 3 -->
+        <article class="service-card">
+          <div class="service-icon">🚀</div>
+          <h3>Digital Marketing</h3>
+          <p>Data-driven SEO, content strategy, and advertising campaigns to grow your brand reach.</p>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <!-- Call to Action -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>Ready to Start Your Project?</h2>
+
+      <p>Get in touch with us today for a free consultation.</p>
+      <p>To generate a service page in code,
+         you can use standard HTML5 and CSS3. Below is a clean, 
+         responsive, single-file HTML/CSS template for a modern 
+         service page featuring a hero section, a 3-column service grid, 
+         and a call-to-action (CTA) banner.</p>
+      <a href="#contact" class="cta-button">Contact Us</a>
+    </div>
+  </section>
+
+</body>
+</html>
