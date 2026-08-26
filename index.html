@@ -3,11 +3,487 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KM DIGITAL Calculator</title>
+  <title>KM DIGITAL TECHNOLOGIES</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  
+  <style>
+    /* Base Variables & Reset */
+    :root {
+      --bg: #f4f4f8;
+      --panel: #ffffff;
+      --dark: #2d2d2d;
+      --primary: #da0863;
+      --primary-2: #c10b21;
+      --accent: #555;
+      --sci: #333232;
+      --num: #da0863;
+      --op: #c10b21;
+      --text: #f4f4f9;
+      --danger: #d32f2f;
+      --equals: #555;
+    }
+
+    :root.dark-mode {
+      --bg: #1a1a1a;
+      --panel: #2d2d2d;
+      --dark: #0a0a0a;
+      --primary: #ff1493;
+      --primary-2: #ff69b4;
+      --accent: #e0e0e0;
+      --sci: #404040;
+      --num: #ff1493;
+      --op: #ff69b4;
+      --text: #f0f0f0;
+      --danger: #ff5252;
+      --equals: #888;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      color: #334155;
+      line-height: 1.7;
+      background-color: var(--bg);
+      display: flex;
+    }
+
+    body.dark-mode {
+      color: #e0e0e0;
+    }
+
+    /* Fixed Sidebar Navigation */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 250px;
+      background-color: #1e1e2f;
+      padding-top: 20px;
+      z-index: 100;
+    }
+
+    .sidebar h2 {
+      color: #fff;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #b3b3b3;
+      padding: 15px 25px;
+      text-decoration: none;
+      font-size: 16px;
+      transition: 0.2s;
+    }
+
+    .sidebar a:hover, .sidebar a.active {
+      color: #fff;
+      background-color: #34344e;
+      border-left: 4px solid #00d2ff;
+    }
+
+    /* Main Page Content Container */
+    .content {
+      margin-left: 250px;
+      padding: 40px;
+      width: calc(100% - 250px);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Hero Header */
+    .hero {
+      background: #0f172a;
+      color: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      border-bottom: 3px solid #007bff;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: #94a3b8;
+    }
+
+    /* Calculator Style */
+    .calc {
+      width: min(92vw, 420px);
+      background: var(--panel);
+      border: 1px solid #d9d9d9;
+      border-radius: 14px;
+      padding: 18px 16px;
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.08);
+      margin: 20px 0;
+      position: relative;
+    }
+
+    .memory-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .title {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    #res {
+      width: 100%;
+      height: 54px;
+      margin: 0 0 14px;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #f9f9f9;
+      font-size: 1.4rem;
+      text-align: right;
+    }
+
+    .buttons-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      width: 100%;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      height: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .sci { background: var(--sci); color: var(--text); }
+    .num { background: var(--num); color: #fff; }
+    .op { background: var(--op); color: #fff; }
+    .danger { background: var(--danger); color: #fff; }
+    .equals { background: var(--equals); color: #fff; }
+    .equals-wide { grid-column: 1 / span 4; }
+
+    .mode-panel { display: none; }
+    .mode-panel.active { display: block; }
+
+    /* Contact Section */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .contact-info {
+      background: #1e293b;
+      color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+    }
+
+    .contact-form-container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+    }
+
+    /* FAQ Styles */
+    .faq-container { max-width: 600px; margin: 20px 0; }
+    .faq-item { border-bottom: 1px solid #ddd; margin-bottom: 10px; }
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 15px 0;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+    }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+    .faq-item.active .faq-answer { max-height: 200px; }
+
+    /* Share Options */
+    .share-btn, .share-links a {
+      padding: 10px 16px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      display: inline-block;
+      margin-right: 8px;
+    }
+
+    /* Responsive */
+    @media screen and (max-width: 768px) {
+      body { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: relative; }
+      .content { margin-left: 0; width: 100%; }
+    }
+  </style>
 </head>
-<body style="text-align:center; padding:50px; font-family:Arial;">
-  <h1 style="color:blue;">KM DIGITAL TECHNOLOGIES</h1>
-  <h2>My Calculator</h2>
-  <p>Site is Working! ✅</p>
+<body>
+
+  <!-- Dashboard Sidebar -->
+  <aside class="sidebar">
+    <h2>Dashboard</h2>
+    <a class="active" href="#home">Home</a>
+    <a href="#calculator">Calculator App</a>
+    <a href="#contact">Contact</a>
+    <a href="#faq">FAQs</a>
+    <a href="#privacy">Privacy Policy</a>
+    <a href="#share">Share App</a>
+    <a href="#setting">Settings</a>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <main class="content">
+
+    <!-- HOME SECTION -->
+    <section id="home">
+      <header class="hero">
+        <h1>Welcome to KM DIGITAL TECHNOLOGIES</h1>
+        <p>Providing high-efficiency tools and modern solution web apps.</p>
+      </header>
+    </section>
+
+    <!-- CALCULATOR SECTION -->
+    <section id="calculator">
+      <h2>Scientific Calculator</h2>
+      
+      <div class="calc">
+        <div class="memory-buttons">
+          <button onclick="memoryClear()">MC</button>
+          <button onclick="memoryRecall()">MR</button>
+          <button onclick="memoryAdd()">M+</button>
+          <button onclick="memorySubtract()">M-</button>
+        </div>
+
+        <div class="top">
+          <span class="title">Standard</span>
+          <button type="button" class="sci" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i></button>
+        </div>
+        
+        <input type="text" id="res" readonly placeholder="0" />
+
+        <div id="standard-panel" class="mode-panel active">
+          <div class="buttons-grid">
+            <button type="button" class="danger" onclick="handle('DEL')">DEL</button>
+            <button type="button" class="danger" onclick="handle('C')">C</button>
+            <button type="button" class="sci" onclick="toggleSign()">+/-</button>
+            <button type="button" class="sci" onclick="handlePercent()">%</button>
+            <button type="button" class="num" onclick="appendValue('7')">7</button>
+            <button type="button" class="num" onclick="appendValue('8')">8</button>
+            <button type="button" class="num" onclick="appendValue('9')">9</button>
+            <button type="button" class="op" onclick="appendValue('/')">/</button>
+            <button type="button" class="num" onclick="appendValue('4')">4</button>
+            <button type="button" class="num" onclick="appendValue('5')">5</button>
+            <button type="button" class="num" onclick="appendValue('6')">6</button>
+            <button type="button" class="op" onclick="appendValue('*')">*</button>
+            <button type="button" class="num" onclick="appendValue('1')">1</button>
+            <button type="button" class="num" onclick="appendValue('2')">2</button>
+            <button type="button" class="num" onclick="appendValue('3')">3</button>
+            <button type="button" class="op" onclick="appendValue('-')">-</button>
+            <button type="button" class="num" onclick="appendValue('0')">0</button>
+            <button type="button" class="num" onclick="appendValue('.')">.</button>
+            <button type="button" class="op" onclick="appendValue('+')">+</button>
+            <button type="button" class="equals equals-wide" onclick="calculate()">=</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact">
+      <h2>Get in Touch</h2>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h3>Contact Details</h3>
+          <p>Email: KM Technology.com</p>
+          <p>Phone: +92 3325710034</p>
+        </div>
+        <div class="contact-form-container">
+          <form action="#" method="POST">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" required></textarea>
+            </div>
+            <button type="submit" class="sci">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faq">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-container">
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>How do I reset my password?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Click on the "Forgot Password" link on the login page and follow instructions.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRIVACY SECTION -->
+    <section id="privacy">
+      <h2>Privacy Policy</h2>
+      <p>Your privacy is important to us. We store no external identity records without permission.</p>
+    </section>
+
+    <!-- SHARE SECTION -->
+    <section id="share">
+      <h2>Share App</h2>
+      <div class="share-links">
+        <button id="shareButton" class="share-btn">Share Page</button>
+      </div>
+    </section>
+
+    <!-- SETTINGS SECTION -->
+    <section id="setting">
+      <h2>App Settings</h2>
+      <div class="form-group">
+        <label for="theme">App Theme</label>
+        <select id="theme" onchange="toggleTheme()">
+          <option value="light">Light Mode</option>
+          <option value="dark">Dark Mode</option>
+        </select>
+      </div>
+    </section>
+
+    <footer>
+      <p>&copy; 2026 KM DIGITAL TECHNOLOGIES</p>
+    </footer>
+
+  </main>
+
+  <script>
+    // Calculator JS State
+    const displayEl = document.getElementById('res');
+    let currentInput = '';
+    let memory = 0;
+
+    function updateDisplay() {
+      if (displayEl) displayEl.value = currentInput || '0';
+    }
+
+    function appendValue(val) {
+      currentInput += val;
+      updateDisplay();
+    }
+
+    function handle(action) {
+      if (action === 'C') currentInput = '';
+      if (action === 'DEL') currentInput = currentInput.slice(0, -1);
+      updateDisplay();
+    }
+
+    function toggleSign() {
+      if (!currentInput) return;
+      currentInput = currentInput.startsWith('-') ? currentInput.slice(1) : '-' + currentInput;
+      updateDisplay();
+    }
+
+    function handlePercent() {
+      if (!currentInput) return;
+      try {
+        currentInput = String(eval(currentInput) / 100);
+        updateDisplay();
+      } catch (e) {
+        currentInput = 'Error';
+        updateDisplay();
+      }
+    }
+
+    function calculate() {
+      try {
+        currentInput = String(eval(currentInput));
+        updateDisplay();
+      } catch (e) {
+        currentInput = 'Error';
+        updateDisplay();
+      }
+    }
+
+    function memoryClear() { memory = 0; alert('Memory Cleared'); }
+    function memoryRecall() { currentInput = String(memory); updateDisplay(); }
+    function memoryAdd() { memory += parseFloat(currentInput) || 0; }
+    function memorySubtract() { memory -= parseFloat(currentInput) || 0; }
+
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark-mode');
+    }
+
+    // FAQ Functionality
+    document.querySelectorAll('.faq-question').forEach((button) => {
+      button.addEventListener('click', () => {
+        const faqItem = button.parentElement;
+        faqItem.classList.toggle('active');
+      });
+    });
+
+    // Native Web Share API
+    document.getElementById('shareButton').addEventListener('click', async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: document.title, url: window.location.href });
+        } catch (err) { console.log('Share error:', err); }
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Link copied to clipboard!');
+      }
+    });
+  </script>
 </body>
 </html>
