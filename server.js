@@ -115,7 +115,7 @@ app.post('/api/convertCurrency', async (req, res) => {
 app.get('/history', (req,res) =>{
   fs.readFile('db.json', 'utf8',(err,data) =>{
     if (err) {
-        return res.status(500).json ({error:'File nahi mili'});
+        return res.status(500).json ({error:'File does not show'});
     }
     const jsonData = JSON.parse(data);
     res.json(jsonData.history || []);
@@ -124,5 +124,5 @@ app.get('/history', (req,res) =>{
 if (require.main === module) {
   app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 }
-
+ 
 module.exports = app;
